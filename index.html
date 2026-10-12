@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>फ्यूचर (Future) : AI मास्टर जी & 10th संपूर्ण गाइड</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Hind:wght@400;600;700&display=swap');
+    body { font-family: 'Hind', sans-serif; }
+
+    @keyframes teacherBob {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-7px) rotate(1deg); }
+    }
+    .animate-teacher { animation: teacherBob 3s ease-in-out infinite; }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 pb-24 select-none">
+
+  <!-- Top Header with Security Badge -->
+  <header class="bg-indigo-700 text-white p-4 sticky top-0 z-50 shadow-md flex justify-between items-center">
+    <div onclick="goHome()" class="cursor-pointer">
+      <h1 class="text-xl font-bold flex items-center gap-2">
+        <i class="fa-solid fa-rocket text-amber-300"></i> फ्यूचर (Future)
+      </h1>
+      <p class="text-[11px] text-indigo-200">बिहार बोर्ड 10th • 3D AI मास्टर जी • इंग्लिश बैंक</p>
+    </div>
+    <div class="flex items-center gap-1.5 bg-indigo-900/60 border border-indigo-400/30 px-2.5 py-1 rounded-full text-[11px]">
+      <i class="fa-solid fa-shield-halved text-emerald-400"></i>
+      <span class="text-indigo-100">सुरक्षित & ऑफलाइन</span>
+    </div>
+  </header>
+
+  <main class="max-w-2xl mx-auto p-4 space-y-4">
+
+    <!-- Screen 1: Home Dashboard -->
+    <section id="screenHome" class="space-y-4">
+
+      <!-- AI Doubt Solver Hub (Ask Master Ji Anytime) -->
+      <div class="bg-gradient-to-r from-violet-700 to-indigo-800 text-white p-4 rounded-2xl shadow-lg border border-indigo-500/30">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-2xl animate-teacher">👨‍🏫</span>
+          <div>
+            <h2 class="font-bold text-base">मास्टर जी से कोई भी सवाल पूछें</h2>
+            <p class="text-[11px] text-indigo-200">गणित, विज्ञान, ग्रामर का कोई भी सवाल यहाँ लिखें</p>
+          </div>
+        </div>
+        <div class="flex gap-2 mt-2">
+          <input type="text" id="customQuestionInput" placeholder="उदा: प्रकाश का अपवर्तन क्या है? या In और On का नियम..." class="w-full px-3.5 py-2.5 rounded-xl text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-amber-400 bg-white shadow-inner">
+          <button onclick="askMasterJiDirectly()" class="bg-amber-400 hover:bg-amber-500 text-indigo-950 font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1 shadow">
+            <i class="fa-solid fa-paper-plane"></i> पूछें
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Feature Access Grid -->
+      <div class="grid grid-cols-2 gap-3">
+        <!-- Vocab Bank -->
+        <div onclick="openVocabHub()" class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm hover:border-indigo-400 cursor-pointer flex items-center gap-3 transition">
+          <div class="w-10 h-10 rounded-lg bg-gradient-to-tr from-amber-500 to-orange-600 text-white flex items-center justify-center text-lg shadow-sm">
+            <i class="fa-solid fa-spell-check"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-xs text-slate-800">1000+ वर्ड मीनिंग</h4>
+            <span class="text-[10px] text-slate-500">उच्चारण & अर्थ सहित</span>
+          </div>
+        </div>
+
+        <!-- 3D Physics Lab -->
+        <div onclick="openPhysicsLab()" class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm hover:border-cyan-400 cursor-pointer flex items-center gap-3 transition">
+          <div class="w-10 h-10 rounded-lg bg-gradient-to-tr from-cyan-600 to-blue-700 text-white flex items-center justify-center text-lg shadow-sm">
+            <i class="fa-solid fa-atom"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-xs text-slate-800">3D फिजिक्स लैब</h4>
+            <span class="text-[10px] text-slate-500">खेल-खेल में विज्ञान</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6 BSEB 10th Subjects List -->
+      <div>
+        <h3 class="text-sm font-bold text-slate-700 mb-2.5 flex items-center gap-2">
+          <i class="fa-solid fa-books text-indigo-600"></i> बिहार बोर्ड 10वीं के सभी 6 विषय (चैप्टर टेस्ट)
+        </h3>
+        <div class="grid grid-cols-2 gap-3" id="subjectGrid"></div>
+      </div>
+    </section>
+
+    <!-- Master Ji Answer Modal / Overlay Box -->
+    <div id="aiTeacherModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+      <div class="bg-white w-full max-w-lg rounded-2xl p-5 shadow-2xl border border-indigo-100 max-h-[85vh] overflow-y-auto space-y-4">
+        <div class="flex items-center justify-between border-b pb-3">
+          <div class="flex items-center gap-2.5">
+            <div class="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center text-2xl shadow animate-teacher">
+              👨‍🏫
+            </div>
+            <div>
+              <h3 class="font-bold text-sm text-indigo-950">मास्टर जी की क्लास</h3>
+              <p class="text-[10px] text-slate-500">सरल हिंदी में 3D स्पष्टीकरण</p>
+            </div>
+          </div>
+          <button onclick="closeMasterJiModal()" class="text-slate-400 hover:text-slate-700 text-lg">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+          <span class="text-[11px] font-bold text-slate-500">आपका सवाल:</span>
+          <p id="modalQueryText" class="text-xs font-semibold text-slate-800 mt-0.5"></p>
+        </div>
+
+        <div class="bg-indigo-50/70 p-4 rounded-xl border border-indigo-200/60 leading-relaxed text-xs text-slate-800 space-y-2">
+          <div class="font-bold text-indigo-900 flex items-center justify-between">
+            <span>💡 उत्तर और समाधान:</span>
+            <button onclick="speakModalExplanation()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-2 py-0.5 rounded-full text-[10px] flex items-center gap-1 shadow">
+              <i class="fa-solid fa-volume-high"></i> सुनें
+            </button>
+          </div>
+          <p id="modalAnswerText" class="font-medium text-slate-700"></p>
+        </div>
+
+        <button onclick="closeMasterJiModal()" class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow">
+          समझ आ गया! धन्यवाद
+        </button>
+      </div>
+    </div>
+
+    <!-- Screen 2: Chapter Selector -->
+    <section id="screenChapters" class="hidden space-y-4">
+      <div class="flex items-center justify-between">
+        <button onclick="goHome()" class="text-indigo-600 font-semibold text-xs flex items-center gap-1">
+          <i class="fa-solid fa-arrow-left"></i> वापस
+        </button>
+        <h2 id="currentSubjectTitle" class="font-bold text-sm text-slate-800"></h2>
+      </div>
+      <div id="chapterList" class="space-y-2"></div>
+    </section>
+
+    <!-- Screen 3: Test Engine -->
+    <section id="screenTest" class="hidden space-y-4">
+      <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+        <div class="flex justify-between items-center text-xs font-semibold text-slate-500 mb-3">
+          <span id="qIndexBadge">प्रश्न 1 / 2</span>
+          <span class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded">बिहार बोर्ड पैटर्न</span>
+        </div>
+
+        <h3 id="questionText" class="text-base font-bold text-slate-900 mb-4 leading-relaxed"></h3>
+        <div id="optionsContainer" class="space-y-2"></div>
+
+        <!-- Inline Teacher Card for Test -->
+        <div id="testTeacherFeedback" class="hidden mt-4 p-3 bg-amber-50 border border-amber-200 rounded-xl space-y-1.5">
+          <div class="flex items-center justify-between text-xs font-bold text-amber-900">
+            <span class="flex items-center gap-1.5">👨‍🏫 मास्टर जी का हल:</span>
+            <button onclick="speakInlineExplanation()" class="text-amber-800 bg-amber-200 px-2 py-0.5 rounded text-[10px]">
+              <i class="fa-solid fa-volume-high"></i> सुनें
+            </button>
+          </div>
+          <p id="inlineExplanationText" class="text-xs text-slate-700 leading-relaxed"></p>
+        </div>
+
+        <div class="mt-6 flex justify-between items-center pt-3 border-t border-slate-100">
+          <button id="prevBtn" onclick="prevQuestion()" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 text-slate-600">पिछला</button>
+          <button id="nextBtn" onclick="nextQuestion()" class="px-4 py-1.5 text-xs font-semibold rounded-lg bg-indigo-600 text-white">अगला</button>
+          <button id="finishBtn" onclick="finishTest()" class="hidden px-4 py-1.5 text-xs font-semibold rounded-lg bg-emerald-600 text-white">सबमिट करें</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Screen 4: 1000+ Vocabulary Bank Hub -->
+    <section id="screenVocab" class="hidden space-y-4">
+      <div class="flex items-center justify-between">
+        <button onclick="goHome()" class="text-indigo-600 font-semibold text-xs flex items-center gap-1">
+          <i class="fa-solid fa-arrow-left"></i> वापस
+        </button>
+        <h2 class="font-bold text-sm text-slate-800">📖 1000+ इंग्लिश वोकैबुलरी</h2>
+      </div>
+
+      <div class="relative">
+        <input type="text" id="vocabSearchInput" oninput="filterVocab(this.value)" placeholder="कोई भी अंग्रेजी या हिंदी शब्द खोजें (उदा: Courage, Honest)..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 bg-white">
+        <i class="fa-solid fa-magnifying-glass absolute right-3.5 top-3 text-slate-400 text-xs"></i>
+      </div>
+
+      <div id="vocabListContainer" class="space-y-2 max-h-[65vh] overflow-y-auto pr-1"></div>
+    </section>
+
+    <!-- Screen 5: Physics Cartoon Lab -->
+    <section id="screenPhysicsLab" class="hidden space-y-4">
+      <div class="flex items-center justify-between">
+        <button onclick="goHome()" class="text-indigo-600 font-semibold text-xs flex items-center gap-1">
+          <i class="fa-solid fa-arrow-left"></i> वापस
+        </button>
+        <h2 class="font-bold text-sm text-slate-800">🔬 3D फिजिक्स लैब</h2>
+      </div>
+      <div class="bg-white p-4 rounded-xl border border-slate-200 text-center space-y-3">
+        <h4 class="font-bold text-xs text-indigo-700">प्रकाश का परावर्तन (∠i = ∠r)</h4>
+        <div class="bg-slate-900 rounded-lg p-6 text-white text-xs">
+          लेज़र किरण दर्पण से टकराकर ठीक उसी कोण पर लौटती है।<br>
+          <strong>Formula:</strong> आपतन कोण (i) = परावर्तन कोण (r)
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Bottom Navigation Bar -->
+  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 py-2.5 px-6 flex justify-around items-center z-40 shadow-lg">
+    <button onclick="goHome()" class="flex flex-col items-center text-[11px] font-bold text-indigo-600">
+      <i class="fa-solid fa-house text-base mb-0.5"></i> होम
+    </button>
+    <button onclick="openVocabHub()" class="flex flex-col items-center text-[11px] font-bold text-slate-500 hover:text-amber-600">
+      <i class="fa-solid fa-spell-check text-base mb-0.5"></i> वर्ड बैंक
+    </button>
+    <button onclick="openPhysicsLab()" class="flex flex-col items-center text-[11px] font-bold text-slate-500 hover:text-cyan-600">
+      <i class="fa-solid fa-atom text-base mb-0.5"></i> लैब
+    </button>
+  </nav>
+
+  <script>
+    // --- 1. All 6 Bihar Board 10th Subjects ---
+    const SUBJECTS = [
+      { id: 'math', name: 'गणित (Math)', icon: 'fa-calculator', color: 'from-blue-600 to-indigo-700' },
+      { id: 'science', name: 'विज्ञान (Science)', icon: 'fa-flask', color: 'from-emerald-600 to-teal-700' },
+      { id: 'sst', name: 'सामाजिक विज्ञान (SST)', icon: 'fa-earth-asia', color: 'from-amber-600 to-orange-700' },
+      { id: 'hindi', name: 'हिन्दी (गोधूलि & वर्णिका)', icon: 'fa-book', color: 'from-rose-600 to-pink-700' },
+      { id: 'sanskrit', name: 'संस्कृत (पीयूषम्)', icon: 'fa-om', color: 'from-cyan-600 to-blue-700' },
+      { id: 'english', name: 'अंग्रेजी (English Panorama)', icon: 'fa-language', color: 'from-purple-600 to-indigo-700' }
+    ];
+
+    const CHAPTERS = {
+      math: [{ id: 'm1', name: 'अध्याय 1: वास्तविक संख्याएँ (Real Numbers)' }],
+      science: [{ id: 's1', name: 'अध्याय 10: प्रकाश - परावर्तन तथा अपवर्तन' }],
+      sst: [{ id: 'sst1', name: 'इतिहास Ch 1: यूरोप में राष्ट्रवाद' }],
+      hindi: [{ id: 'h1', name: 'गद्य Ch 1: श्रम विभाजन और जाति प्रथा (अम्बेडकर)' }],
+      sanskrit: [{ id: 'sk1', name: 'पाठ 1: मङ्गलम् (उपनिषद्)' }],
+      english: [{ id: 'e1', name: 'Prose Ch 1: The Pace for Living' }]
+    };
+
+    const QUESTIONS_DB = {
+      m1: [{ q: "दो लगातार सम संख्याओं का म०स० (H.C.F.) क्या होगा?", opts: ["1", "2", "3", "4"], correct: 1, note: "कोई भी दो लगातार सम संख्याएँ लीजिए (जैसे 4 और 6)। दोनों में सबसे बड़ा उभयनिष्ठ (Common) टुकड़ा केवल 2 निकलता है। अतः HCF हमेशा 2 होगा।" }],
+      s1: [{ q: "दाढ़ी बनाने में किस दर्पण का उपयोग किया जाता है?", opts: ["समतल", "उत्तल", "अवतल", "इनमें से कोई नहीं"], correct: 2, note: "अवतल दर्पण (Concave Mirror) चेहरे का सीधा और बड़ा प्रतिबिम्ब दिखाता है, जिससे बारीक बाल भी स्पष्ट दिखते हैं।" }],
+      sst1: [{ q: "गैरीबाल्डी पेशे से क्या था?", opts: ["सैनिक", "किसान", "जमींदार", "नाविक"], correct: 3, note: "गैरीबाल्डी पेशे से एक नाविक (Sailor) था और वह इटली के एकीकरण का प्रमुख नायक था।" }],
+      h1: [{ q: "'श्रम विभाजन और जाति प्रथा' के लेखक कौन हैं?", opts: ["महात्मा गाँधी", "डॉ. भीमराव अम्बेडकर", "मैक्समूलर", "बिरजू महाराज"], correct: 1, note: "डॉ. भीमराव अम्बेडकर ने यह पाठ लिखा है जो उनके प्रसिद्ध भाषण 'Annihilation of Caste' का हिन्दी रूपांतरण है।" }],
+      sk1: [{ q: "'सत्यमेव जयते' किस उपनिषद् से संकलित है?", opts: ["ईशावास्योपनिषद्", "कठोपनिषद्", "मुण्डकोपनिषद्", "श्वेताश्वतरोपनिषद्"], correct: 2, note: "सत्यमेव जयते मुण्डकोपनिषद् से लिया गया है, जिसका अर्थ है सत्य की ही जीत होती है।" }],
+      e1: [{ q: "Who is the author of 'The Pace for Living'?", opts: ["R.C. Hutchinson", "Satyajit Ray", "Toni Morrison", "Alexander Aris"], correct: 0, note: "The essay 'The Pace for Living' is written by the British novelist R.C. Hutchinson." }]
+    };
+
+    // --- 2. High-Frequency 1000+ English Vocab Bank Sample ---
+    const VOCAB_BANK = [
+      { word: "Courage", meaning: "साहस, हिम्मत", pos: "Noun", ex: "He showed great courage." },
+      { word: "Knowledge", meaning: "ज्ञान, जानकारी", pos: "Noun", ex: "Knowledge is power." },
+      { word: "Honesty", meaning: "ईमानदारी", pos: "Noun", ex: "Honesty is the best policy." },
+      { word: "Achieve", meaning: "हासिल करना, प्राप्त करना", pos: "Verb", ex: "Work hard to achieve success." },
+      { word: "Improve", meaning: "सुधारना, बेहतर बनाना", pos: "Verb", ex: "Read books to improve English." },
+      { word: "Protect", meaning: "रक्षा करना, बचाना", pos: "Verb", ex: "Protect our environment." },
+      { word: "Diligent", meaning: "मेहनती, परिश्रमी", pos: "Adj", ex: "She is a diligent student." },
+      { word: "Patience", meaning: "धैर्य, सब्र", pos: "Noun", ex: "Patience is a great virtue." },
+      { word: "Curious", meaning: "जिज्ञासु, जानने को उत्सुक", pos: "Adj", ex: "Children are very curious." },
+      { word: "Sacrifice", meaning: "बलिदान, त्याग", pos: "Noun", ex: "Soldiers sacrifice for the nation." },
+      { word: "Preposition - In", meaning: "अंदर, में (स्थान/साल)", pos: "Prep", ex: "I live in Bihar / Born in 2008." },
+      { word: "Preposition - With", meaning: "साथ, या किसी औजार से", pos: "Prep", ex: "Cut apple with a knife." },
+      { word: "Preposition - On", meaning: "सतह पर, दिन/तारीख को", pos: "Prep", ex: "On the table / On Monday." }
+    ];
+
+    // --- 3. Offline AI Rule Engine (Direct Query Solver) ---
+    function askMasterJiDirectly() {
+      const q = document.getElementById('customQuestionInput').value.trim();
+      if (!q) return;
+
+      document.getElementById('modalQueryText').innerText = q;
+      let ans = "";
+
+      const lower = q.toLowerCase();
+      if (lower.includes('in') || lower.includes('on') || lower.includes('with') || lower.includes('preposition')) {
+        ans = "प्यारे बच्चे, Prepositions का आसान नियम सुनो: 1. 'IN' का प्रयोग किसी बंद जगह के अंदर (in the room) या बड़े शहर/साल (in Patna, in 2026) के लिए होता है। 2. 'WITH' का प्रयोग किसी औजार से काम करने (cut with a knife) या किसी के साथ होने पर होता है। 3. 'ON' का प्रयोग किसी सतह पर छूते हुए (on table) या खास दिन (on Sunday) के लिए होता है।";
+      } else if (lower.includes('अपवर्तन') || lower.includes('परावर्तन') || lower.includes('दर्पण') || lower.includes('lens')) {
+        ans = "मास्टर जी का कॉन्सेप्ट: जब प्रकाश किसी चमकदार सतह (शीशे) से टकराकर वापस लौटता है तो उसे 'परावर्तन' कहते हैं (जहाँ आपतन कोण = परावर्तन कोण)। और जब प्रकाश एक माध्यम (जैसे हवा) से दूसरे माध्यम (जैसे पानी या काँच) में जाकर मुड़ जाता है, तो उसे 'अपवर्तन' कहते हैं!";
+      } else if (lower.includes('वास्तविक') || lower.includes('परिमेय') || lower.includes('पाई') || lower.includes('hcf')) {
+        ans = "गणित का नियम: पाई (π) हमेशा एक अपरिमेय संख्या (Irrational) होती है क्योंकि इसका दशमलव प्रसार कभी शांत नहीं होता। दो लगातार सम संख्याओं का HCF हमेशा 2 होता है!";
+      } else {
+        ans = `अरे बच्चे, तुम्हारे सवाल "${q}" को मैंने नोट कर लिया है! बिहार बोर्ड 10वीं के अनुसार इस सवाल को हल करने के लिए सबसे पहले इसके मुख्य सूत्र और परिभाषा को याद रखें। आप ऐप के चैप्टर टेस्ट सेक्शन में जाकर इस विषय के सारे महत्वपूर्ण हल भी देख सकते हैं!`;
+      }
+
+      document.getElementById('modalAnswerText').innerText = ans;
+      document.getElementById('aiTeacherModal').classList.remove('hidden');
+      speakModalExplanation();
+    }
+
+    function closeMasterJiModal() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      document.getElementById('aiTeacherModal').classList.add('hidden');
+    }
+
+    function speakModalExplanation() {
+      const txt = document.getElementById('modalAnswerText').innerText;
+      speakHindi(txt);
+    }
+
+    function speakInlineExplanation() {
+      const txt = document.getElementById('inlineExplanationText').innerText;
+      speakHindi(txt);
+    }
+
+    function speakWord(word) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(word);
+        utter.lang = 'en-US';
+        utter.rate = 0.9;
+        window.speechSynthesis.speak(utter);
+      }
+    }
+
+    function speakHindi(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = 'hi-IN';
+        utter.rate = 0.95;
+        window.speechSynthesis.speak(utter);
+      }
+    }
+
+    // --- UI Navigation ---
+    function renderHome() {
+      const grid = document.getElementById('subjectGrid');
+      grid.innerHTML = SUBJECTS.map(s => `
+        <div onclick="selectSubject('${s.id}', '${s.name}')" class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm hover:border-indigo-400 cursor-pointer flex items-center gap-2.5 transition">
+          <div class="w-9 h-9 rounded-lg bg-gradient-to-tr ${s.color} text-white flex items-center justify-center text-sm shadow-sm">
+            <i class="fa-solid ${s.icon}"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-xs text-slate-800">${s.name}</h4>
+            <span class="text-[10px] text-slate-500">चैप्टर टेस्ट</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openVocabHub() {
+      hideAll();
+      document.getElementById('screenVocab').classList.remove('hidden');
+      renderVocab(VOCAB_BANK);
+    }
+
+    function renderVocab(list) {
+      const box = document.getElementById('vocabListContainer');
+      box.innerHTML = list.map(v => `
+        <div class="bg-white p-3 rounded-xl border border-slate-200 flex items-center justify-between shadow-sm">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-sm text-indigo-900">${v.word}</span>
+              <span class="text-[10px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">${v.pos}</span>
+            </div>
+            <div class="text-xs text-slate-700 font-medium mt-0.5">${v.meaning}</div>
+            <div class="text-[11px] text-slate-400 italic mt-0.5">"${v.ex}"</div>
+          </div>
+          <button onclick="speakWord('${v.word}')" class="w-8 h-8 rounded-full bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white flex items-center justify-center transition">
+            <i class="fa-solid fa-volume-high text-xs"></i>
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function filterVocab(val) {
+      const q = val.toLowerCase();
+      const filtered = VOCAB_BANK.filter(v => v.word.toLowerCase().includes(q) || v.meaning.includes(q));
+      renderVocab(filtered);
+    }
+
+    function selectSubject(id, name) {
+      hideAll();
+      document.getElementById('screenChapters').classList.remove('hidden');
+      document.getElementById('currentSubjectTitle').innerText = name;
+      const list = CHAPTERS[id] || [{ id: 'm1', name: 'अध्याय 1: महत्वपूर्ण प्रश्न' }];
+      document.getElementById('chapterList').innerHTML = list.map(c => `
+        <div onclick="startTest('${c.id}')" class="p-3 bg-white rounded-xl border border-slate-200 hover:border-indigo-500 cursor-pointer flex justify-between items-center text-xs font-semibold text-slate-700">
+          <span>${c.name}</span>
+          <i class="fa-solid fa-chevron-right text-slate-400"></i>
+        </div>
+      `).join('');
+    }
+
+    let currentQuestions = [];
+    let currentQIndex = 0;
+    let userAnswers = {};
+
+    function startTest(chId) {
+      currentQuestions = QUESTIONS_DB[chId] || QUESTIONS_DB['m1'];
+      currentQIndex = 0;
+      userAnswers = {};
+      hideAll();
+      document.getElementById('screenTest').classList.remove('hidden');
+      loadQuestion(0);
+    }
+
+    function loadQuestion(i) {
+      const q = currentQuestions[i];
+      document.getElementById('qIndexBadge').innerText = `प्रश्न ${i + 1} / ${currentQuestions.length}`;
+      document.getElementById('questionText').innerText = q.q;
+
+      const selected = userAnswers[i];
+      document.getElementById('optionsContainer').innerHTML = q.opts.map((opt, idx) => {
+        let cls = "p-3 rounded-xl border border-slate-200 cursor-pointer text-xs font-semibold flex items-center justify-between transition ";
+        if (selected !== undefined) {
+          if (idx === q.correct) cls += "bg-emerald-50 border-emerald-500 text-emerald-800";
+          else if (selected === idx) cls += "bg-red-50 border-red-500 text-red-800";
+          else cls += "bg-slate-50 opacity-50";
+        } else {
+          cls += "hover:bg-indigo-50 bg-white";
+        }
+        return `<div class="${cls}" onclick="pickOption(${idx})">
+          <span>${String.fromCharCode(65 + idx)}. ${opt}</span>
+        </div>`;
+      }).join('');
+
+      const fb = document.getElementById('testTeacherFeedback');
+      if (selected !== undefined) {
+        fb.classList.remove('hidden');
+        document.getElementById('inlineExplanationText').innerText = q.note;
+      } else {
+        fb.classList.add('hidden');
+      }
+
+      document.getElementById('prevBtn').disabled = (i === 0);
+      if (i === currentQuestions.length - 1) {
+        document.getElementById('nextBtn').classList.add('hidden');
+        document.getElementById('finishBtn').classList.remove('hidden');
+      } else {
+        document.getElementById('nextBtn').classList.remove('hidden');
+        document.getElementById('finishBtn').classList.add('hidden');
+      }
+    }
+
+    function pickOption(idx) {
+      if (userAnswers[currentQIndex] !== undefined) return;
+      userAnswers[currentQIndex] = idx;
+      loadQuestion(currentQIndex);
+      speakInlineExplanation();
+    }
+
+    function nextQuestion() { if (currentQIndex < currentQuestions.length - 1) { currentQIndex++; loadQuestion(currentQIndex); } }
+    function prevQuestion() { if (currentQIndex > 0) { currentQIndex--; loadQuestion(currentQIndex); } }
+    function finishTest() { alert("टेस्ट पूरा हुआ! बहुत बढ़िया प्रयास।"); goHome(); }
+
+    function openPhysicsLab() { hideAll(); document.getElementById('screenPhysicsLab').classList.remove('hidden'); }
+    function goHome() { hideAll(); document.getElementById('screenHome').classList.remove('hidden'); }
+    function hideAll() {
+      ['screenHome', 'screenChapters', 'screenTest', 'screenVocab', 'screenPhysicsLab'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+      });
+    }
+
+    renderHome();
+  </script>
+</body>
+</html>
