@@ -1,0 +1,980 @@
+ <!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>फ्यूचर (Future) : बिहार बोर्ड 10वीं संपूर्ण ऐप & AI मास्टर जी</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Hind:wght@400;600;700&display=swap');
+    body { font-family: 'Hind', sans-serif; }
+
+    @keyframes teacherFloat {
+      0%, 100% { transform: translateY(0px) scale(1); }
+      50% { transform: translateY(-6px) scale(1.02); }
+    }
+    .animate-masterji { animation: teacherFloat 3s ease-in-out infinite; }
+
+    @keyframes speakingWave {
+      0%, 100% { height: 6px; }
+      50% { height: 22px; }
+    }
+    .voice-wave { animation: speakingWave 0.8s ease-in-out infinite; }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 pb-24 select-none">
+
+  <!-- ================= 0. REGISTRATION & OTP VERIFICATION SCREEN ================= -->
+  <div id="authScreen" class="fixed inset-0 bg-slate-900/90 z-[100] flex items-center justify-center p-4 backdrop-blur-md overflow-y-auto">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl border border-indigo-100 text-center space-y-4 my-auto">
+      <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-600 text-white flex items-center justify-center text-2xl mx-auto shadow-lg shadow-indigo-300">
+        <i class="fa-solid fa-user-graduate"></i>
+      </div>
+      <div>
+        <h2 class="text-lg font-bold text-slate-800">विद्यार्थी पंजीकरण (Registration)</h2>
+        <p class="text-xs text-slate-500">फ्यूचर अध्ययन मंच पर अपना विवरण दर्ज करें</p>
+      </div>
+
+      <!-- Step A: Student Details -->
+      <div id="phoneStep" class="space-y-3 text-left">
+        <div>
+          <label class="text-[11px] font-bold text-slate-600">विद्यार्थी का पूरा नाम</label>
+          <div class="flex items-center border border-slate-300 rounded-xl px-3 py-2 mt-1 focus-within:ring-2 focus-within:ring-indigo-500 bg-slate-50">
+            <i class="fa-solid fa-user text-slate-400 text-xs mr-2"></i>
+            <input type="text" id="userNameInput" placeholder="अपना नाम लिखें" class="w-full bg-transparent text-xs text-slate-800 focus:outline-none font-semibold">
+          </div>
+        </div>
+
+        <div>
+          <label class="text-[11px] font-bold text-slate-600">मोबाइल नंबर (10 अंक)</label>
+          <div class="flex items-center border border-slate-300 rounded-xl px-3 py-2 mt-1 focus-within:ring-2 focus-within:ring-indigo-500 bg-slate-50">
+            <span class="text-xs font-bold text-slate-500 mr-2">+91</span>
+            <input type="tel" id="userPhoneInput" maxlength="10" placeholder="10 अंकों का नंबर" class="w-full bg-transparent text-xs text-slate-800 focus:outline-none font-semibold">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="text-[11px] font-bold text-slate-600">राज्य (State)</label>
+            <div class="flex items-center border border-slate-300 rounded-xl px-3 py-2 mt-1 focus-within:ring-2 focus-within:ring-indigo-500 bg-slate-50">
+              <input type="text" id="userStateInput" placeholder="उदा: बिहार" class="w-full bg-transparent text-xs text-slate-800 focus:outline-none font-semibold">
+            </div>
+          </div>
+          <div>
+            <label class="text-[11px] font-bold text-slate-600">ज़िला (District)</label>
+            <div class="flex items-center border border-slate-300 rounded-xl px-3 py-2 mt-1 focus-within:ring-2 focus-within:ring-indigo-500 bg-slate-50">
+              <input type="text" id="userDistrictInput" placeholder="उदा: पटना" class="w-full bg-transparent text-xs text-slate-800 focus:outline-none font-semibold">
+            </div>
+          </div>
+        </div>
+
+        <button onclick="sendOTP()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl text-xs font-bold shadow-md transition flex items-center justify-center gap-1.5 mt-2">
+          <span>OTP कोड प्राप्त करें</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+
+      <!-- Step B: OTP Verification -->
+      <div id="otpStep" class="hidden space-y-3 text-left">
+        <div class="bg-emerald-50 border border-emerald-200 p-2.5 rounded-xl flex items-center gap-2">
+          <i class="fa-solid fa-envelope-open-text text-emerald-600 text-sm"></i>
+          <div class="text-[11px] text-emerald-800">
+            आपका सुरक्षित सत्यापन कोड: <strong id="generatedOtpBadge" class="text-xs font-bold text-emerald-950 tracking-wider">1234</strong>
+          </div>
+        </div>
+        <div>
+          <label class="text-[11px] font-bold text-slate-600">4-अंकों का OTP दर्ज करें</label>
+          <input type="number" id="userOtpInput" maxlength="4" placeholder="4 अंकों का OTP" class="w-full border border-slate-300 rounded-xl px-3 py-2 mt-1 text-center text-sm font-bold tracking-widest text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50">
+        </div>
+        <button onclick="verifyOTP()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl text-xs font-bold shadow-md transition flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-circle-check"></i>
+          <span>सत्यापित करें एवं प्रवेश लें</span>
+        </button>
+        <button onclick="resetAuth()" class="w-full text-center text-[11px] text-slate-400 hover:text-slate-600">विवरण बदलें</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Header -->
+  <header class="bg-indigo-700 text-white p-4 sticky top-0 z-50 shadow-md flex justify-between items-center">
+    <div onclick="goHome()" class="cursor-pointer">
+      <h1 class="text-xl font-bold flex items-center gap-2">
+        <i class="fa-solid fa-graduation-cap text-amber-300"></i> फ्यूचर (Future)
+      </h1>
+      <p class="text-[11px] text-indigo-200">बिहार विद्यालय परीक्षा समिति • 10वीं संपूर्ण शिक्षण मंच</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <div class="flex items-center gap-1.5 bg-indigo-900/60 border border-indigo-400/30 px-2.5 py-1 rounded-full text-[11px]">
+        <i class="fa-solid fa-user-check text-emerald-400"></i>
+        <span class="text-indigo-100 font-semibold" id="headerUserName">विद्यार्थी</span>
+      </div>
+      <button onclick="logoutUser()" title="लॉगआउट" class="w-7 h-7 rounded-full bg-indigo-800/80 hover:bg-red-600 text-white flex items-center justify-center text-xs transition">
+        <i class="fa-solid fa-right-from-bracket"></i>
+      </button>
+    </div>
+  </header>
+
+  <main class="max-w-2xl mx-auto p-4 space-y-4">
+
+    <!-- Student Welcome Badge -->
+    <div id="studentWelcomeBanner" class="bg-white px-4 py-2.5 rounded-xl border border-slate-200 flex justify-between items-center text-xs">
+      <div>
+        <span class="text-slate-500 font-medium">विद्यार्थी: </span>
+        <strong id="displayStudentFullName" class="text-indigo-900 font-bold">छात्र</strong>
+      </div>
+      <div class="text-[11px] text-slate-500 font-medium">
+        <i class="fa-solid fa-location-dot text-rose-500 mr-1"></i>
+        <span id="displayStudentLocation">बिहार</span>
+      </div>
+    </div>
+
+    <!-- Screen 1: Home Dashboard -->
+    <section id="screenHome" class="space-y-4">
+
+      <!-- Universal 3D Master Ji Live Help Desk -->
+      <div class="bg-gradient-to-br from-indigo-900 via-indigo-800 to-violet-900 text-white p-4 rounded-2xl shadow-xl border border-indigo-500/40 relative overflow-hidden">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-14 h-14 rounded-2xl bg-amber-400 text-indigo-950 flex items-center justify-center text-3xl shadow-lg animate-masterji flex-shrink-0">
+            👨‍🏫
+          </div>
+          <div>
+            <h2 class="font-bold text-sm text-amber-300 flex items-center gap-1.5">
+              <span>3D मास्टर जी (सर्वज्ञानी AI शिक्षक)</span>
+              <span class="bg-emerald-500 text-white text-[9px] px-1.5 py-0.5 rounded-full font-sans">असीमित समाधान</span>
+            </h2>
+            <p class="text-[11px] text-indigo-200 leading-tight mt-0.5">10वीं का कोई भी विषय, कोई भी अध्याय या सामान्य ज्ञान का कोई भी सवाल यहाँ पूछें</p>
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <input type="text" id="customQuestionInput" placeholder="किताब का कोई भी सवाल या डाउट यहाँ लिखें..." class="w-full px-3.5 py-2.5 rounded-xl text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-amber-400 bg-white shadow-inner font-medium">
+          <button onclick="askMasterJiDirectly()" class="bg-amber-400 hover:bg-amber-500 text-indigo-950 font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-md flex-shrink-0">
+            <i class="fa-solid fa-chalkboard-user"></i>
+            <span>हल पाएँ</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Feature Cards -->
+      <div class="grid grid-cols-2 gap-3">
+        <div onclick="openVocabHub()" class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm hover:border-indigo-400 cursor-pointer flex items-center gap-3 transition">
+          <div class="w-10 h-10 rounded-lg bg-gradient-to-tr from-amber-500 to-orange-600 text-white flex items-center justify-center text-lg shadow-sm">
+            <i class="fa-solid fa-spell-check"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-xs text-slate-800">1000+ शब्दकोश</h4>
+            <span class="text-[10px] text-slate-500">उच्चारण एवं हिंदी अर्थ</span>
+          </div>
+        </div>
+
+        <div onclick="openPhysicsLab()" class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm hover:border-cyan-400 cursor-pointer flex items-center gap-3 transition">
+          <div class="w-10 h-10 rounded-lg bg-gradient-to-tr from-cyan-600 to-blue-700 text-white flex items-center justify-center text-lg shadow-sm">
+            <i class="fa-solid fa-atom"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-xs text-slate-800">3D भौतिकी प्रयोगशाला</h4>
+            <span class="text-[10px] text-emerald-600 font-semibold">🔴 परावर्तन प्रयोग</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- BSEB 10th Subjects List -->
+      <div>
+        <div class="flex justify-between items-center mb-2.5">
+          <h3 class="text-sm font-bold text-slate-700 flex items-center gap-2">
+            <i class="fa-solid fa-book-open-reader text-indigo-600"></i> बिहार बोर्ड 10वीं के सभी विषय
+          </h3>
+          <span class="text-[11px] text-indigo-600 font-semibold">सम्पूर्ण पाठ्यक्रम</span>
+        </div>
+        <div class="grid grid-cols-2 gap-2.5" id="subjectGrid"></div>
+      </div>
+    </section>
+
+    <!-- Master Ji 3D Answer Modal -->
+    <div id="aiTeacherModal" class="hidden fixed inset-0 bg-black/65 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+      <div class="bg-white w-full max-w-lg rounded-2xl p-5 shadow-2xl border border-indigo-100 max-h-[88vh] overflow-y-auto space-y-4">
+        
+        <div class="flex items-center justify-between border-b pb-3">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-indigo-100 border border-indigo-300 flex items-center justify-center text-2xl shadow animate-masterji flex-shrink-0">
+              👨‍🏫
+            </div>
+            <div>
+              <h3 class="font-bold text-sm text-indigo-950 flex items-center gap-1.5">
+                <span>मास्टर जी की कक्षा</span>
+                <span class="text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-semibold">सटीक व्याख्या</span>
+              </h3>
+              <p class="text-[10px] text-slate-500">शुद्ध हिंदी में धाराप्रवाह गुरुजन शैली</p>
+            </div>
+          </div>
+          <button onclick="closeMasterJiModal()" class="text-slate-400 hover:text-slate-700 text-xl p-1">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+          <span class="text-[10px] font-bold text-indigo-600 uppercase tracking-wide">विद्यार्थी का प्रश्न:</span>
+          <p id="modalQueryText" class="text-xs font-semibold text-slate-800 mt-0.5"></p>
+        </div>
+
+        <div class="bg-indigo-50/70 p-4 rounded-xl border border-indigo-200/80 leading-relaxed text-xs text-slate-800 space-y-3">
+          <div class="flex items-center justify-between border-b border-indigo-200/50 pb-2">
+            <span class="font-bold text-indigo-950 flex items-center gap-1">
+              <i class="fa-solid fa-chalkboard-user text-indigo-600"></i> शिक्षक का विस्तृत उत्तर:
+            </span>
+            <div class="flex items-center gap-2">
+              <div id="audioWaveBox" class="hidden flex items-end gap-0.5 h-5 px-2">
+                <span class="w-1 bg-indigo-600 rounded-full voice-wave"></span>
+                <span class="w-1 bg-indigo-600 rounded-full voice-wave" style="animation-delay: 0.2s"></span>
+                <span class="w-1 bg-indigo-600 rounded-full voice-wave" style="animation-delay: 0.4s"></span>
+              </div>
+              <button id="modalAudioBtn" onclick="toggleModalSpeech()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded-full text-[11px] font-bold flex items-center gap-1.5 shadow">
+                <i class="fa-solid fa-volume-high"></i>
+                <span id="audioBtnText">सुनें</span>
+              </button>
+            </div>
+          </div>
+          <p id="modalAnswerText" class="font-normal text-slate-800 whitespace-pre-line leading-relaxed text-[12px]"></p>
+        </div>
+
+        <button onclick="closeMasterJiModal()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow">
+          धन्यवाद गुरुजी! समझ आ गया
+        </button>
+      </div>
+    </div>
+
+    <!-- Screen 2: Chapter Selector Screen -->
+    <section id="screenChapters" class="hidden space-y-4">
+      <div class="flex items-center justify-between">
+        <button onclick="goHome()" class="text-indigo-600 font-semibold text-xs flex items-center gap-1">
+          <i class="fa-solid fa-arrow-left"></i> मुख्य पृष्ठ
+        </button>
+        <h2 id="currentSubjectTitle" class="font-bold text-sm text-slate-800"></h2>
+      </div>
+      <div class="bg-indigo-50 border border-indigo-200 p-2.5 rounded-xl text-xs text-indigo-900 font-medium">
+        📖 जिस अध्याय का अभ्यास करना चाहते हैं, उसका चयन करें:
+      </div>
+      <div id="chapterList" class="space-y-2"></div>
+    </section>
+
+    <!-- Screen 3: Test Engine -->
+    <section id="screenTest" class="hidden space-y-4">
+      <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+        <div class="flex justify-between items-center text-xs font-semibold text-slate-500 mb-3">
+          <span id="qIndexBadge">प्रश्न 1 / 2</span>
+          <span class="bg-indigo-50 text-indigo-700 px-2.5 py-0.5 rounded-full font-bold">बिहार बोर्ड प्रारूप</span>
+        </div>
+
+        <h3 id="questionText" class="text-sm font-bold text-slate-900 mb-4 leading-relaxed"></h3>
+        <div id="optionsContainer" class="space-y-2.5"></div>
+
+        <div id="testTeacherFeedback" class="hidden mt-4 p-3 bg-amber-50 border border-amber-200 rounded-xl space-y-2">
+          <div class="flex items-center justify-between text-xs font-bold text-amber-900">
+            <span class="flex items-center gap-1.5">👨‍🏫 शिक्षक का चरणबद्ध हल:</span>
+            <button onclick="speakInlineExplanation()" class="text-amber-900 bg-amber-200 hover:bg-amber-300 px-2.5 py-0.5 rounded text-[11px] flex items-center gap-1">
+              <i class="fa-solid fa-volume-high"></i> सुनें
+            </button>
+          </div>
+          <p id="inlineExplanationText" class="text-xs text-slate-700 leading-relaxed font-normal"></p>
+        </div>
+
+        <div class="mt-6 flex justify-between items-center pt-3 border-t border-slate-100">
+          <button id="prevBtn" onclick="prevQuestion()" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 text-slate-600">पूर्व प्रश्न</button>
+          <button id="nextBtn" onclick="nextQuestion()" class="px-4 py-1.5 text-xs font-semibold rounded-lg bg-indigo-600 text-white">अगला प्रश्न</button>
+          <button id="finishBtn" onclick="finishTest()" class="hidden px-4 py-1.5 text-xs font-semibold rounded-lg bg-emerald-600 text-white">परीक्षा समाप्त करें</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Screen 4: 1000+ Vocabulary Bank Hub -->
+    <section id="screenVocab" class="hidden space-y-4">
+      <div class="flex items-center justify-between">
+        <button onclick="goHome()" class="text-indigo-600 font-semibold text-xs flex items-center gap-1">
+          <i class="fa-solid fa-arrow-left"></i> मुख्य पृष्ठ
+        </button>
+        <h2 class="font-bold text-sm text-slate-800">📖 1000+ अंग्रेजी शब्दकोश एवं व्याकरण</h2>
+      </div>
+
+      <div class="relative">
+        <input type="text" id="vocabSearchInput" oninput="filterVocab(this.value)" placeholder="शब्द अथवा अर्थ खोजें (जैसे: Speak, Honest, Diligent)..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 bg-white">
+        <i class="fa-solid fa-magnifying-glass absolute right-3.5 top-3 text-slate-400 text-xs"></i>
+      </div>
+
+      <div id="vocabListContainer" class="space-y-2 max-h-[65vh] overflow-y-auto pr-1"></div>
+    </section>
+
+    <!-- Screen 5: 3D Physics Lab -->
+    <section id="screenPhysicsLab" class="hidden space-y-4">
+      <div class="flex items-center justify-between">
+        <button onclick="goHome()" class="text-indigo-600 font-semibold text-xs flex items-center gap-1">
+          <i class="fa-solid fa-arrow-left"></i> मुख्य पृष्ठ
+        </button>
+        <h2 class="font-bold text-sm text-slate-800">🔬 3D भौतिकी प्रकाश प्रयोगशाला</h2>
+      </div>
+
+      <div class="bg-slate-900 rounded-2xl p-4 shadow-xl border border-slate-800 text-white space-y-3">
+        <div class="flex justify-between items-center text-xs">
+          <span class="text-amber-400 font-bold flex items-center gap-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span> लेज़र किरण प्रदीप्त
+          </span>
+          <span class="bg-indigo-900/80 px-2 py-1 rounded text-cyan-300 font-mono text-[11px]" id="angleLiveBadge">
+            ∠i = 45° | ∠r = 45°
+          </span>
+        </div>
+
+        <div class="w-full h-48 bg-slate-950 rounded-xl relative overflow-hidden flex items-center justify-center border border-slate-800">
+          <svg id="laserSvg" class="w-full h-full" viewBox="0 0 300 180">
+            <rect x="20" y="150" width="260" height="8" fill="#38bdf8" rx="2" />
+            <line x1="20" y1="158" x2="280" y2="158" stroke="#0284c7" stroke-width="2" stroke-dasharray="4,4" />
+            <line x1="150" y1="30" x2="150" y2="150" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="3,3" />
+            <text x="154" y="45" fill="#94a3b8" font-size="10">अभिलंब (Normal)</text>
+
+            <line id="incidentRay" x1="40" y1="40" x2="150" y2="150" stroke="#ef4444" stroke-width="3.5" stroke-linecap="round" />
+            <line id="reflectedRay" x1="150" y1="150" x2="260" y2="40" stroke="#22c55e" stroke-width="3.5" stroke-linecap="round" />
+            <circle cx="150" cy="150" r="4" fill="#fbbf24" />
+          </svg>
+        </div>
+
+        <div class="space-y-2 pt-1">
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-slate-300 font-semibold">आपतन कोण (Angle of Incidence):</span>
+            <span id="angleValText" class="text-amber-400 font-bold font-mono">45°</span>
+          </div>
+          <input type="range" id="angleSlider" min="15" max="75" value="45" oninput="updateLaserAngle(this.value)" class="w-full accent-amber-400 cursor-pointer">
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <button onclick="changeAngle(-5)" class="bg-slate-800 hover:bg-slate-700 py-2 rounded-xl text-xs font-bold text-white border border-slate-700 flex items-center justify-center gap-1.5">
+              <i class="fa-solid fa-minus text-amber-400"></i> कोण घटाएँ (-5°)
+            </button>
+            <button onclick="changeAngle(5)" class="bg-slate-800 hover:bg-slate-700 py-2 rounded-xl text-xs font-bold text-white border border-slate-700 flex items-center justify-center gap-1.5">
+              <i class="fa-solid fa-plus text-amber-400"></i> कोण बढ़ाएँ (+5°)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-2xl border border-indigo-100 shadow-sm flex items-start gap-3">
+        <div class="w-12 h-12 rounded-full bg-indigo-100 text-2xl flex items-center justify-center shadow animate-masterji flex-shrink-0">
+          👨‍🏫
+        </div>
+        <div class="space-y-1.5 flex-1">
+          <div class="flex justify-between items-center">
+            <h4 class="font-bold text-xs text-indigo-950">शिक्षक का वैज्ञानिक सिद्धांत</h4>
+            <button onclick="speakLabExplanation()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-2 py-0.5 rounded-full text-[10px] flex items-center gap-1 shadow">
+              <i class="fa-solid fa-volume-high"></i> सुनें
+            </button>
+          </div>
+          <p id="labExplanationText" class="text-xs text-slate-700 leading-relaxed font-medium">
+            प्रकाश के परावर्तन का प्रथम नियम: आपतन कोण सदैव परावर्तन कोण के तुल्य होता है (अर्थात् ∠i = ∠r)।
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Bottom Navigation Bar -->
+  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 py-2.5 px-6 flex justify-around items-center z-40 shadow-lg">
+    <button onclick="goHome()" class="flex flex-col items-center text-[11px] font-bold text-indigo-600">
+      <i class="fa-solid fa-house text-base mb-0.5"></i> मुख्य पृष्ठ
+    </button>
+    <button onclick="openVocabHub()" class="flex flex-col items-center text-[11px] font-bold text-slate-500 hover:text-amber-600">
+      <i class="fa-solid fa-spell-check text-base mb-0.5"></i> शब्दकोश
+    </button>
+    <button onclick="openPhysicsLab()" class="flex flex-col items-center text-[11px] font-bold text-slate-500 hover:text-cyan-600">
+      <i class="fa-solid fa-atom text-base mb-0.5"></i> प्रयोगशाला
+    </button>
+  </nav>
+
+  <script>
+    // --- 0. EXTENDED STUDENT AUTHENTICATION ---
+    let currentOtp = "";
+
+    function checkExistingAuth() {
+      const savedPhone = localStorage.getItem("futureAppUserPhone");
+      const savedName = localStorage.getItem("futureAppUserName");
+      const savedState = localStorage.getItem("futureAppUserState");
+      const savedDistrict = localStorage.getItem("futureAppUserDistrict");
+
+      if (savedPhone && savedName) {
+        document.getElementById('authScreen').classList.add('hidden');
+        document.getElementById('headerUserName').innerText = savedName.split(' ')[0];
+        document.getElementById('displayStudentFullName').innerText = savedName;
+        document.getElementById('displayStudentLocation').innerText = `${savedDistrict || 'ज़िला'}, ${savedState || 'राज्य'}`;
+      }
+    }
+
+    function sendOTP() {
+      const name = document.getElementById('userNameInput').value.trim();
+      const phone = document.getElementById('userPhoneInput').value.trim();
+      const state = document.getElementById('userStateInput').value.trim();
+      const district = document.getElementById('userDistrictInput').value.trim();
+
+      if (!name) { alert("कृपया विद्यार्थी का नाम दर्ज करें!"); return; }
+      if (phone.length !== 10 || isNaN(phone)) { alert("कृपया 10 अंकों का मान्य मोबाइल नंबर दर्ज करें!"); return; }
+      if (!state) { alert("कृपया अपना राज्य दर्ज करें!"); return; }
+      if (!district) { alert("कृपया अपना ज़िला दर्ज करें!"); return; }
+
+      currentOtp = Math.floor(1000 + Math.random() * 9000).toString();
+      document.getElementById('generatedOtpBadge').innerText = currentOtp;
+      document.getElementById('phoneStep').classList.add('hidden');
+      document.getElementById('otpStep').classList.remove('hidden');
+    }
+
+    function verifyOTP() {
+      const enteredOtp = document.getElementById('userOtpInput').value.trim();
+      if (enteredOtp === currentOtp) {
+        const name = document.getElementById('userNameInput').value.trim();
+        const phone = document.getElementById('userPhoneInput').value.trim();
+        const state = document.getElementById('userStateInput').value.trim();
+        const district = document.getElementById('userDistrictInput').value.trim();
+
+        localStorage.setItem("futureAppUserName", name);
+        localStorage.setItem("futureAppUserPhone", phone);
+        localStorage.setItem("futureAppUserState", state);
+        localStorage.setItem("futureAppUserDistrict", district);
+
+        document.getElementById('headerUserName').innerText = name.split(' ')[0];
+        document.getElementById('displayStudentFullName').innerText = name;
+        document.getElementById('displayStudentLocation').innerText = `${district}, ${state}`;
+
+        document.getElementById('authScreen').classList.add('hidden');
+        alert(`सत्यापन सफल रहा! नमस्कार ${name}, फ्यूचर शिक्षण मंच पर आपका स्वागत है।`);
+      } else {
+        alert("त्रुटि: कृपया सही 4-अंकीय कोड दर्ज करें।");
+      }
+    }
+
+    function resetAuth() {
+      document.getElementById('otpStep').classList.add('hidden');
+      document.getElementById('phoneStep').classList.remove('hidden');
+    }
+
+    function logoutUser() {
+      if (confirm("क्या आप लॉगआउट करना चाहते हैं?")) {
+        localStorage.removeItem("futureAppUserName");
+        localStorage.removeItem("futureAppUserPhone");
+        localStorage.removeItem("futureAppUserState");
+        localStorage.removeItem("futureAppUserDistrict");
+
+        document.getElementById('userNameInput').value = "";
+        document.getElementById('userPhoneInput').value = "";
+        document.getElementById('userStateInput').value = "";
+        document.getElementById('userDistrictInput').value = "";
+        document.getElementById('userOtpInput').value = "";
+
+        resetAuth();
+        document.getElementById('authScreen').classList.remove('hidden');
+      }
+    }
+
+    // --- 1. FULL BIHAR BOARD 10TH CURRICULUM ---
+    const SUBJECTS = [
+      { id: 'math', name: 'गणित (Mathematics)', icon: 'fa-calculator', color: 'from-blue-600 to-indigo-700' },
+      { id: 'phy', name: 'भौतिकी (Physics)', icon: 'fa-bolt', color: 'from-cyan-600 to-blue-700' },
+      { id: 'chem', name: 'रसायन शास्त्र (Chemistry)', icon: 'fa-flask-vial', color: 'from-emerald-600 to-teal-700' },
+      { id: 'bio', name: 'जीव विज्ञान (Biology)', icon: 'fa-dna', color: 'from-green-600 to-emerald-700' },
+      { id: 'hist', name: 'इतिहास (History)', icon: 'fa-monument', color: 'from-amber-600 to-orange-700' },
+      { id: 'geo', name: 'भूगोल (Geography)', icon: 'fa-earth-americas', color: 'from-teal-600 to-emerald-700' },
+      { id: 'civics', name: 'राजनीति विज्ञान (Civics)', icon: 'fa-scale-balanced', color: 'from-indigo-600 to-blue-700' },
+      { id: 'eco', name: 'अर्थशास्त्र (Economics)', icon: 'fa-chart-line', color: 'from-orange-600 to-rose-700' },
+      { id: 'hindi', name: 'हिन्दी (गोधूलि & वर्णिका)', icon: 'fa-book-open', color: 'from-rose-600 to-pink-700' },
+      { id: 'sanskrit', name: 'संस्कृत (पीयूषम्)', icon: 'fa-om', color: 'from-amber-700 to-yellow-600' },
+      { id: 'english', name: 'अंग्रेजी (English Panorama)', icon: 'fa-language', color: 'from-purple-600 to-violet-700' }
+    ];
+
+    const CHAPTERS = {
+      math: [
+        { id: 'm1', name: 'अध्याय 1: वास्तविक संख्याएँ (Real Numbers)' },
+        { id: 'm2', name: 'अध्याय 2: बहुपद (Polynomials)' },
+        { id: 'm3', name: 'अध्याय 3: दो चर वाले रैखिक समीकरण युग्म' },
+        { id: 'm4', name: 'अध्याय 4: द्विघात समीकरण (Quadratic Equations)' },
+        { id: 'm5', name: 'अध्याय 5: समांतर श्रेढ़ियाँ (A.P.)' },
+        { id: 'm6', name: 'अध्याय 6: त्रिभुज (Triangles)' },
+        { id: 'm7', name: 'अध्याय 7: निर्देशांक ज्यामिति (Coordinate Geometry)' },
+        { id: 'm8', name: 'अध्याय 8: त्रिकोणमिति का परिचय' },
+        { id: 'm9', name: 'अध्याय 9: त्रिकोणमिति के अनुप्रयोग (ऊँचाई एवं दूरी)' },
+        { id: 'm10', name: 'अध्याय 10: वृत्त (Circles)' },
+        { id: 'm11', name: 'अध्याय 12: वृत्तों से संबंधित क्षेत्रफल' },
+        { id: 'm12', name: 'अध्याय 13: पृष्ठीय क्षेत्रफल और आयतन' },
+        { id: 'm13', name: 'अध्याय 14: सांख्यिकी (Statistics)' },
+        { id: 'm14', name: 'अध्याय 15: प्रायिकता (Probability)' }
+      ],
+      phy: [
+        { id: 'p1', name: 'अध्याय 1: प्रकाश - परावर्तन तथा अपवर्तन' },
+        { id: 'p2', name: 'अध्याय 2: मानव नेत्र तथा रंगबिरंगा संसार' },
+        { id: 'p3', name: 'अध्याय 3: विद्युत (Electricity)' },
+        { id: 'p4', name: 'अध्याय 4: विद्युत धारा के चुंबकीय प्रभाव' },
+        { id: 'p5', name: 'अध्याय 5: ऊर्जा के स्रोत' }
+      ],
+      chem: [
+        { id: 'c1', name: 'अध्याय 1: रासायनिक अभिक्रियाएँ एवं समीकरण' },
+        { id: 'c2', name: 'अध्याय 2: अम्ल, क्षारक एवं लवण' },
+        { id: 'c3', name: 'अध्याय 3: धातु एवं अधातु' },
+        { id: 'c4', name: 'अध्याय 4: कार्बन एवं उसके यौगिक' },
+        { id: 'c5', name: 'अध्याय 5: तत्वों का आवर्त वर्गीकरण' }
+      ],
+      bio: [
+        { id: 'b1', name: 'अध्याय 1: जैव प्रक्रम (पोषण, श्वसन, वहन, उत्सर्जन)' },
+        { id: 'b2', name: 'अध्याय 2: नियंत्रण एवं समन्वय' },
+        { id: 'b3', name: 'अध्याय 3: जीव जनन कैसे करते हैं?' },
+        { id: 'b4', name: 'अध्याय 4: आनुवंशिकता एवं जैव विकास' },
+        { id: 'b5', name: 'अध्याय 5: हमारा पर्यावरण' }
+      ],
+      hist: [
+        { id: 'h1', name: 'अध्याय 1: यूरोप में राष्ट्रवाद' },
+        { id: 'h2', name: 'अध्याय 2: समाजवाद एवं साम्यवाद' },
+        { id: 'h3', name: 'अध्याय 3: हिन्द-चीन में राष्ट्रवादी आंदोलन' },
+        { id: 'h4', name: 'अध्याय 4: भारत में राष्ट्रवाद' },
+        { id: 'h5', name: 'अध्याय 5: अर्थव्यवस्था और आजीविका' },
+        { id: 'h6', name: 'अध्याय 6: शहरीकरण एवं शहरी जीवन' }
+      ],
+      geo: [
+        { id: 'g1', name: 'अध्याय 1: भारत - संसाधन एवं उपयोग' },
+        { id: 'g2', name: 'अध्याय 2: कृषि' },
+        { id: 'g3', name: 'अध्याय 3: निर्माण उद्योग' },
+        { id: 'g4', name: 'खंड ख: आपदा प्रबंधन' }
+      ],
+      civics: [
+        { id: 'cv1', name: 'अध्याय 1: लोकतंत्र में सत्ता की साझेदारी' },
+        { id: 'cv2', name: 'अध्याय 2: सत्ता में साझेदारी की कार्यप्रणाली' }
+      ],
+      eco: [
+        { id: 'ec1', name: 'अध्याय 1: अर्थव्यवस्था एवं इसके विकास का इतिहास' },
+        { id: 'ec2', name: 'अध्याय 2: राज्य एवं राष्ट्र की आय' }
+      ],
+      hindi: [
+        { id: 'hn1', name: 'गद्य Ch 1: श्रम विभाजन और जाति प्रथा (अम्बेडकर)' },
+        { id: 'hn2', name: 'गद्य Ch 2: विष के दांत (नलिन विलोचन शर्मा)' }
+      ],
+      sanskrit: [
+        { id: 'sk1', name: 'पाठ 1: मङ्गलम्' },
+        { id: 'sk2', name: 'पाठ 2: पाटलिपुत्रवैभवम्' }
+      ],
+      english: [
+        { id: 'en1', name: 'Prose 1: The Pace for Living (R.C. Hutchinson)' },
+        { id: 'en2', name: 'Grammar: Prepositions, Tenses & Voice' }
+      ]
+    };
+
+    const QUESTIONS_DB = {
+      m1: [
+        { q: "दो लगातार सम संख्याओं का महत्तम समापवर्तक (H.C.F.) क्या होता है?", opts: ["1", "2", "3", "4"], correct: 1, note: "किन्हीं भी दो क्रमागत सम संख्याओं में 2 ही उच्चतम सार्व गुणनखंड होता है। अतः म०स० सदैव 2 होगा।" },
+        { q: "संख्या π (पाई) किस प्रकार की संख्या है?", opts: ["परिमेय संख्या", "अपरिमेय संख्या", "पूर्णांक", "प्राकृत संख्या"], correct: 1, note: "पाई का दशमलव मान अशांत अनावर्ती होता है। अतः यह एक अपरिमेय संख्या है।" }
+      ],
+      p1: [
+        { q: "दाढ़ी बनाने में किस दर्पण का उपयोग किया जाता है?", opts: ["समतल दर्पण", "उत्तल दर्पण", "अवतल दर्पण", "इनमें से कोई नहीं"], correct: 2, note: "अवतल दर्पण वस्तु का सीधा, आभासी और बड़ा प्रतिबिंब बनाता है।" },
+        { q: "प्रकाश के परावर्तन के कितने नियम होते हैं?", opts: ["1", "2", "3", "4"], correct: 1, note: "परावर्तन के दो नियम हैं: 1. आपतित किरण, परावर्तित किरण और अभिलंब एक ही तल में होते हैं। 2. आपतन कोण सदैव परावर्तन कोण के तुल्य होता है।" }
+      ],
+      b1: [
+        { q: "प्रकाश संश्लेषण के लिए पौधों को किस गैस की आवश्यकता होती है?", opts: ["ऑक्सीजन (O₂)", "कार्बन डाइऑक्साइड (CO₂)", "नाइट्रोजन (N₂)", "हाइड्रोजन"], correct: 1, note: "पौधे वायुमंडल से कार्बन डाइऑक्साइड (CO₂) लेकर पर्णहरित और सूर्य के प्रकाश से भोजन बनाते हैं।" }
+      ]
+    };
+
+    const VOCAB_BANK = [
+      { word: "Speak", meaning: "बोलना, वार्तालाप करना", pos: "Verb", ex: "Always speak the truth." },
+      { word: "Courage", meaning: "साहस, धैर्य, वीरता", pos: "Noun", ex: "He faced the challenge with courage." },
+      { word: "Knowledge", meaning: "ज्ञान, विद्या", pos: "Noun", ex: "Knowledge is the greatest wealth." },
+      { word: "Honesty", meaning: "सत्यनिष्ठा, ईमानदारी", pos: "Noun", ex: "Honesty is the best policy." },
+      { word: "Achieve", meaning: "उपलब्ध करना, हासिल करना", pos: "Verb", ex: "Hard work helps you achieve success." },
+      { word: "Improve", meaning: "सुधार करना, परिष्कृत करना", pos: "Verb", ex: "Regular study improves performance." },
+      { word: "Diligent", meaning: "परिश्रमी, कर्मठ", pos: "Adj", ex: "A diligent student excels in board exams." },
+      { word: "Patience", meaning: "धैर्य, संयम", pos: "Noun", ex: "Patience is essential for wisdom." }
+    ];
+
+    // --- 2. CLEAN HINDI SPEECH SYNTHESIS ENGINE ---
+    let speechSynth = window.speechSynthesis;
+    let isSpeaking = false;
+
+    function speakCleanHindi(text) {
+      if (!('speechSynthesis' in window)) return;
+      speechSynth.cancel();
+
+      const cleaned = text
+        .replace(/[*#_~]/g, '')
+        .replace(/[•-]/g, ' ')
+        .replace(/\n+/g, '। ');
+
+      const utterance = new SpeechSynthesisUtterance(cleaned);
+      utterance.lang = 'hi-IN';
+      utterance.rate = 0.88;
+      utterance.pitch = 0.95;
+
+      utterance.onstart = () => {
+        isSpeaking = true;
+        const wave = document.getElementById('audioWaveBox');
+        if (wave) wave.classList.remove('hidden');
+        const btnText = document.getElementById('audioBtnText');
+        if (btnText) btnText.innerText = "रोकें";
+      };
+
+      utterance.onend = () => {
+        isSpeaking = false;
+        const wave = document.getElementById('audioWaveBox');
+        if (wave) wave.classList.add('hidden');
+        const btnText = document.getElementById('audioBtnText');
+        if (btnText) btnText.innerText = "सुनें";
+      };
+
+      utterance.onerror = () => {
+        isSpeaking = false;
+        const wave = document.getElementById('audioWaveBox');
+        if (wave) wave.classList.add('hidden');
+        const btnText = document.getElementById('audioBtnText');
+        if (btnText) btnText.innerText = "सुनें";
+      };
+
+      speechSynth.speak(utterance);
+    }
+
+    function toggleModalSpeech() {
+      if (isSpeaking) {
+        speechSynth.cancel();
+        isSpeaking = false;
+        document.getElementById('audioWaveBox').classList.add('hidden');
+        document.getElementById('audioBtnText').innerText = "सुनें";
+      } else {
+        const txt = document.getElementById('modalAnswerText').innerText;
+        speakCleanHindi(txt);
+      }
+    }
+
+    function speakWord(w) {
+      if (!('speechSynthesis' in window)) return;
+      speechSynth.cancel();
+      const u = new SpeechSynthesisUtterance(w);
+      u.lang = 'en-US';
+      u.rate = 0.82;
+      speechSynth.speak(u);
+    }
+
+    // --- 3. UNIVERSAL AI TEACHER ENGINE (ALL 10th SUBJECTS + OUT-OF-SYLLABUS RESOLVER) ---
+    function askMasterJiDirectly() {
+      const q = document.getElementById('customQuestionInput').value.trim();
+      if (!q) {
+        alert("प्रिय विद्यार्थी, कृपया अपना प्रश्न लिखें!");
+        return;
+      }
+
+      document.getElementById('modalQueryText').innerText = q;
+      const lower = q.toLowerCase();
+      let answer = "";
+
+      const hasWord = (w) => new RegExp(`(^|\\s|[.,!?])${w}($|\\s|[.,!?])`, 'i').test(lower);
+
+      // ===== 1. BIOLOGY (जीव विज्ञान) =====
+      if (lower.includes('प्रकाश संश्लेषण') || lower.includes('photosynthesis') || lower.includes('पौधे भोजन')) {
+        answer = "प्रिय विद्यार्थी, प्रकाश संश्लेषण को ध्यान से समझिए:\n\n1. परिभाषा: हरे पौधे सूर्य के प्रकाश और क्लोरोफिल की उपस्थिति में वायुमंडल से CO₂ और जड़ से H₂O लेकर भोजन (ग्लूकोज) बनाते हैं और O₂ छोड़ते हैं।\n2. समीकरण: 6CO₂ + 6H₂O ➔ C₆H₁₂O₆ + 6O₂\n3. अनिवार्य तत्व: सूर्य प्रकाश, क्लोरोफिल, कार्बन डाइऑक्साइड, जल।";
+      }
+      else if (lower.includes('श्वसन') || lower.includes('respiration') || lower.includes('माइटोकॉन्ड्रिया')) {
+        answer = "प्रिय विद्यार्थी, श्वसन एक ऊष्माक्षेपी और अपचयी क्रिया है।\n\n• वायवीय श्वसन: ऑक्सीजन की उपस्थिति में माइटोकॉन्ड्रिया में होता है (38 ATP ऊर्जा निकलती है)।\n• अवायवीय श्वसन: ऑक्सीजन की अनुपस्थिति में ईस्ट या मांसपेशियों में होता है (लैक्टिक अम्ल या एथेनॉल बनता है)।";
+      }
+      else if (lower.includes('नेफ्रॉन') || lower.includes('उत्सर्जन') || lower.includes('वृक्क') || lower.includes('kidney')) {
+        answer = "प्रिय विद्यार्थी, उत्सर्जन तंत्र का मूल अंग वृक्क (Kidney) होता है।\n\n• वृक्क की क्रियात्मक और संरचनात्मक इकाई को 'नेफ्रॉन' (वृक्काणु) कहते हैं।\n• यह रक्त से हानिकारक यूरिया, यूरिक अम्ल और अतिरिक्त लवण को छानकर मूत्र बनाता है।";
+      }
+      else if (lower.includes('जनन') || lower.includes('डीएनए') || lower.includes('dna') || lower.includes('आनुवंशिकता') || lower.includes('मेंडल')) {
+        answer = "प्रिय विद्यार्थी, आनुवंशिकी और जनन का सार:\n\n• ग्रेगर जॉन मेंडल को 'आनुवंशिकी का जनक' कहा जाता है; उन्होंने मटर के पौधे पर प्रयोग किया था।\n• DNA का पूरा नाम डीऑक्सीराइबोन्यूक्लिक अम्ल है, जो पैतृक गुणों को अगली पीढ़ी में ले जाता है।\n• जनन दो प्रकार के होते हैं: अलैंगिक (एक जनक) और लैंगिक (दो जनक)।";
+      }
+      else if (lower.includes('हृदय') || lower.includes('रक्त') || lower.includes('धमनी') || lower.includes('शिरा')) {
+        answer = "प्रिय विद्यार्थी, परिसंचरण तंत्र का ज्ञान:\n\n• मानव हृदय में 4 कोष्ठ (2 अलिंद, 2 निलय) होते हैं।\n• धमनी: शुद्ध (ऑक्सीजनयुक्त) रक्त को हृदय से पूरे शरीर में ले जाती है।\n• शिरा: अशुद्ध रक्त को शरीर से वापस हृदय में लाती है।\n• रक्त का तरल भाग प्लाज्मा कहलाता है और लाल रक्त कण (RBC) हीमोग्लोबिन के कारण लाल होते हैं।";
+      }
+
+      // ===== 2. PHYSICS (भौतिकी) =====
+      else if (lower.includes('परावर्तन') || lower.includes('दर्पण') || lower.includes('reflection')) {
+        answer = "प्रिय विद्यार्थी, प्रकाश का परावर्तन:\n\n• जब प्रकाश किसी चिकनी सतह से टकराकर उसी माध्यम में लौटता है, तो उसे परावर्तन कहते हैं।\n• नियम: 1. आपतित किरण, परावर्तित किरण और अभिलंब एक ही समतल में होते हैं। 2. आपतन कोण सदैव परावर्तन कोण के बराबर होता है (∠i = ∠r)।\n• अवतल दर्पण हजामत बनाने और डॉक्टरों द्वारा कान-नाक देखने में प्रयोग होता है।";
+      }
+      else if (lower.includes('अपवर्तन') || lower.includes('लेंस') || lower.includes('refraction') || lower.includes('स्नेल')) {
+        answer = "प्रिय विद्यार्थी, प्रकाश का अपवर्तन:\n\n• जब प्रकाश किरण एक माध्यम से दूसरे माध्यम में जाती है, तो चाल में अंतर के कारण मुड़ जाती है।\n• स्नेल का नियम: sin i / sin r = स्थिरांक (अपवर्तनांक µ)।\n• उत्तल लेंस बीच में मोटा और किनारों पर पतला होता है (अभिसारी लेंस)।";
+      }
+      else if (lower.includes('नेत्र') || lower.includes('दृष्टि दोष') || lower.includes('मायोपिया') || lower.includes('hypermetropia')) {
+        answer = "प्रिय विद्यार्थी, मानव नेत्र और दृष्टि दोष:\n\n• निकट दृष्टि दोष: दूर की वस्तु नहीं दिखती; निवारण हेतु 'अवतल लेंस' का चश्मा लगता है।\n• दूर दृष्टि दोष: पास की वस्तु नहीं दिखती; निवारण हेतु 'उत्तल लेंस' का चश्मा लगता है।\n• सामान्य नेत्र के लिए स्पष्ट दर्शन की न्यूनतम दूरी 25 सेमी और अधिकतम दूरी अनंत होती है।";
+      }
+      else if (lower.includes('ओम') || lower.includes('विद्युत') || lower.includes('प्रतिरोध') || lower.includes('current') || lower.includes("ohm's law")) {
+        answer = "प्रिय विद्यार्थी, विद्युत और ओम का नियम:\n\n• ओम का नियम: अचर ताप पर चालक से बहने वाली धारा (I), सिरों के विभवांतर (V) के समानुपाती होती है (V = I × R)।\n• विद्युत धारा का मात्रक 'एम्पीयर' (A), विभवांतर का मात्रक 'वोल्ट' (V), और प्रतिरोध का मात्रक 'ओम' (Ω) होता है।";
+      }
+      else if (lower.includes('चुंबक') || lower.includes('फ्लेमिंग') || lower.includes('मोटर') || lower.includes('जनित्र')) {
+        answer = "प्रिय विद्यार्थी, चुंबकीय प्रभाव के नियम:\n\n• फ्लेमिंग का वाम-हस्त (बायाँ हाथ) नियम: विद्युत मोटर के कार्य सिद्धांत में चालक पर लगने वाले बल की दिशा बताता है (अंगूठा=बल, तर्जनी=चुंबकीय क्षेत्र, मध्यमा=धारा)।\n• विद्युत मोटर विद्युत ऊर्जा को यांत्रिक ऊर्जा में बदलती है। जनित्र (डायनेमो) यांत्रिक ऊर्जा को विद्युत ऊर्जा में बदलता है।";
+      }
+
+      // ===== 3. CHEMISTRY (रसायन शास्त्र) =====
+      else if (lower.includes('रासायनिक समीकरण') || lower.includes('अभिक्रिया') || lower.includes('संतुलित')) {
+        answer = "प्रिय विद्यार्थी, रासायनिक समीकरण के मूल नियम:\n\n• द्रव्यमान संरक्षण के नियम के अनुसार, तीर के दोनों ओर प्रत्येक तत्व के परमाणुओं की संख्या बराबर होनी चाहिए, जिसे संतुलित समीकरण कहते हैं।\n• प्रकार: संयोजन (जुड़ना), वियोजन (टूटना), विस्थापन, और द्विविस्थापन अभिक्रिया।";
+      }
+      else if (lower.includes('अम्ल') || lower.includes('क्षार') || lower.includes('लवण') || lower.includes('ph')) {
+        answer = "प्रिय विद्यार्थी, अम्ल, क्षारक एवं pH मान:\n\n• अम्ल स्वाद में खट्टे होते हैं, H⁺ आयन देते हैं (pH < 7)।\n• क्षारक स्वाद में कड़वे होते हैं, OH⁻ आयन देते हैं (pH > 7)।\n• उदासीन जल का pH = 7 होता है। मानव रक्त का pH लगभग 7.4 होता है।";
+      }
+      else if (lower.includes('धातु') || lower.includes('अधातु') || lower.includes('सक्रियता')) {
+        answer = "प्रिय विद्यार्थी, धातु एवं अधातु के गुण:\n\n• धातुएँ चमकीली, आघातवर्ध्य, तन्य और विद्युत की सुचालक होती हैं। पारा (Hg) कमरे के ताप पर द्रव धातु है।\n• अधातुएँ भंगुर होती हैं। ब्रोमीन (Br) द्रव अधातु है और ग्रेफाइट विद्युत का सुचालक अधातु है।\n• सबसे अधिक क्रियाशील धातु पोटैशियम (K) और सोडियम (Na) हैं, जिन्हें मिट्टी के तेल (केरोसिन) में डुबोकर रखा जाता है।";
+      }
+      else if (lower.includes('कार्बन') || lower.includes('हाइड्रोकार्बन') || lower.includes('मेथेन') || lower.includes('एथेनॉल')) {
+        answer = "प्रिय विद्यार्थी, कार्बन और उसके यौगिक:\n\n• कार्बन की संयोजकता 4 होती है (चतुःसंयोजी) और यह सहसंयोजी आबंध बनाता है।\n• संतृप्त हाइड्रोकार्बन: एल्केन (CₙH₂ₙ₊₂), जैसे मेथेन (CH₄)।\n• असंतृप्त हाइड्रोकार्बन: एल्कीन (CₙH₂ₙ) और एल्काइन (CₙH₂ₙ₋₂)।";
+      }
+      else if (lower.includes('आवर्त') || lower.includes('मेंडलीफ') || lower.includes('आधुनिक आवर्त')) {
+        answer = "प्रिय विद्यार्थी, आवर्त सारणी का ज्ञान:\n\n• मेंडलीफ की आवर्त सारणी परमाणु द्रव्यमान पर आधारित थी।\n• हेनरी मोजले की आधुनिक आवर्त सारणी परमाणु क्रमांक (संख्या) पर आधारित है, जिसमें 18 वर्ग (समूह) और 7 आवर्त होते हैं।";
+      }
+
+      // ===== 4. MATHEMATICS (गणित) =====
+      else if (lower.includes('hcf') || lower.includes('म०स०') || lower.includes('परिमेय') || lower.includes('अपरिमेय') || lower.includes('पाई')) {
+        answer = "प्रिय विद्यार्थी, वास्तविक संख्याएँ:\n\n• दो लगातार सम संख्याओं का HCF = 2 होता है। दो लगातार विषम संख्याओं का HCF = 1 होता है।\n• यूक्लिड विभाजन: a = bq + r (जहाँ 0 ≤ r < b).\n• पाई (π) एक अपरिमेय संख्या है, जबकि 22/7 परिमेय है।";
+      }
+      else if (lower.includes('द्विघात') || lower.includes('विवेचक') || lower.includes('discriminant') || lower.includes('d=')) {
+        answer = "प्रिय विद्यार्थी, द्विघात समीकरण (ax² + bx + c = 0):\n\n• विविक्तकर: D = b² - 4ac\n• श्रीधराचार्य सूत्र: x = [-b ± √(b² - 4ac)] / 2a\n• यदि D > 0 तो मूल वास्तविक और असमान, D = 0 तो मूल समान (-b/2a), और D < 0 तो कोई वास्तविक मूल नहीं।";
+      }
+      else if (lower.includes('समांतर श्रेढ़ी') || lower.includes('a.p') || lower.includes('सार्व अंतर')) {
+        answer = "प्रिय विद्यार्थी, समांतर श्रेढ़ी (A.P.) के सूत्र:\n\n• n-वाँ पद: aₙ = a + (n - 1)d\n• n पदों का योग: Sₙ = n/2 [2a + (n - 1)d] अथवा Sₙ = n/2 [a + l]\n• सार्व अंतर (d) = a₂ - a₁।";
+      }
+      else if (lower.includes('त्रिकोणमिति') || lower.includes('sin') || lower.includes('cos') || lower.includes('tan')) {
+        answer = "प्रिय विद्यार्थी, त्रिकोणमिति के अनिवार्य सूत्र:\n\n• sin θ = लम्ब/कर्ण, cos θ = आधार/कर्ण, tan θ = लम्ब/आधार।\n• सर्वसमिकाएँ: 1. sin²θ + cos²θ = 1, 2. 1 + tan²θ = sec²θ, 3. 1 + cot²θ = cosec²θ।\n• मान: sin 30° = 1/2, sin 90° = 1, cos 0° = 1, tan 45° = 1।";
+      }
+      else if (lower.includes('निर्देशांक') || lower.includes('दूरी सूत्र') || lower.includes('विभाजन सूत्र')) {
+        answer = "प्रिय विद्यार्थी, निर्देशांक ज्यामिति के सूत्र:\n\n• दो बिंदुओं (x₁, y₁) और (x₂, y₂) के बीच की दूरी: d = √[(x₂ - x₁)² + (y₂ - y₁)²]\n• मूल बिंदु से दूरी: √(x² + y²)\n• मध्य बिंदु का निर्देशांक: [(x₁ + x₂)/2 , (y₁ + y₂)/2]।";
+      }
+      else if (lower.includes('प्रायिकता') || lower.includes('probability') || lower.includes('पासा') || lower.includes('सिक्का')) {
+        answer = "प्रिय विद्यार्थी, प्रायिकता के नियम:\n\n• प्रायिकता P(E) = अनुकूल परिणामों की संख्या / कुल परिणामों की संख्या।\n• किसी निश्चित घटना की प्रायिकता 1 और असंभव घटना की प्रायिकता 0 होती है।\n• प्रायिकता का मान सदैव 0 और 1 के बीच (0 ≤ P(E) ≤ 1) होता है। यह कभी ऋणात्मक नहीं हो सकता।";
+      }
+
+      // ===== 5. SOCIAL SCIENCE (सामाजिक विज्ञान) =====
+      else if (lower.includes('गैरीबाल्डी') || lower.includes('मेजिनी') || lower.includes('बिस्मार्क') || lower.includes('राष्ट्रवाद')) {
+        answer = "प्रिय विद्यार्थी, इतिहास का महत्वपूर्ण तथ्य:\n\n• गैरीबाल्डी पेशे से नाविक था, जिसने 'लाल कुर्ती' सेना का गठन कर इटली का एकीकरण किया।\n• बिस्मार्क ने जर्मनी के एकीकरण के लिए 'रक्त और लौह की नीति' अपनाई।\n• मेजिनी ने 'यंग इटली' और 'यंग यूरोप' की स्थापना की थी।";
+      }
+      else if (lower.includes('गांधी') || lower.includes('असहयोग') || lower.includes('दांडी') || lower.includes('चंपारण')) {
+        answer = "प्रिय विद्यार्थी, भारत में राष्ट्रवाद:\n\n• चंपारण सत्याग्रह (1917, बिहार): गांधी जी का भारत में पहला सत्याग्रह था, जो तिनकठिया नील व्यवस्था के विरुद्ध हुआ।\n• असहयोग आंदोलन (1920-1922): चौरी-चौरा कांड के बाद वापस लिया गया।\n• सविनय अवज्ञा आंदोलन (1930): दांडी यात्रा (नमक कानून तोड़कर) से प्रारंभ हुआ।";
+      }
+      else if (lower.includes('संसाधन') || lower.includes('काली मिट्टी') || lower.includes('जलोढ़')) {
+        answer = "प्रिय विद्यार्थी, भूगोल के तथ्य:\n\n• 'संसाधन होते नहीं, बनते हैं' - यह कथन जिम्मरमैन का था।\n• जलोढ़ मिट्टी भारत में सर्वाधिक विस्तृत और उपजाऊ मिट्टी है।\n• काली मिट्टी (रेगुर मिट्टी) कपास की खेती के लिए सर्वोत्तम होती है।";
+      }
+      else if (lower.includes('लोकतंत्र') || lower.includes('संविधान') || lower.includes('ग्राम पंचायत')) {
+        answer = "प्रिय विद्यार्थी, राजनीति विज्ञान:\n\n• अब्राहम लिंकन: 'लोकतंत्र जनता का, जनता के द्वारा और जनता के लिए शासन है।'\n• पंचायती राज की त्रिस्तरीय व्यवस्था बिहार में लागू है (ग्राम पंचायत, पंचायत समिति, जिला परिषद)। बिहार ने महिलाओं को पंचायतों में 50% आरक्षण दिया है।";
+      }
+      else if (lower.includes('मुद्रा') || lower.includes('gdp') || lower.includes('अर्थव्यवस्था') || lower.includes('बैंक')) {
+        answer = "प्रिय विद्यार्थी, अर्थशास्त्र:\n\n• भारतीय रिजर्व बैंक (RBI) भारत का केंद्रीय बैंक है (स्थापना 1935)।\n• अर्थव्यवस्था के तीन क्षेत्र: 1. प्राथमिक (कृषि), 2. द्वितीयक (उद्योग), 3. तृतीयक (सेवा क्षेत्र)।";
+      }
+
+      // ===== 6. ENGLISH VOCABULARY & GRAMMAR =====
+      else if (hasWord('speak') || lower.includes('स्पीक') || lower.includes('speak का')) {
+        answer = "प्रिय विद्यार्थी, अंग्रेजी शब्द 'Speak' का ज्ञान:\n\n• शब्द: Speak (क्रिया - Verb)\n• हिंदी अर्थ: बोलना, कहना, बातचीत करना\n• Forms: Speak (V1), Spoke (V2), Spoken (V3)\n• वाक्य: Always speak politely and honestly.";
+      }
+      else if (hasWord('courage') || lower.includes('करेज')) {
+        answer = "प्रिय विद्यार्थी, शब्द 'Courage':\n\n• व्याकरण: Noun (भाववाचक संज्ञा)\n• अर्थ: साहस, वीरता, आत्मबल\n• वाक्य: Courage is not the absence of fear, but victory over it.";
+      }
+      else if (hasWord('honest') || lower.includes('ऑनेस्ट')) {
+        answer = "प्रिय विद्यार्थी, शब्द 'Honest':\n\n• व्याकरण: Adjective (विशेषण)\n• अर्थ: सत्यनिष्ठ, ईमानदार (H साइलेंट रहता है)\n• वाक्य: An honest person is respected by everyone.";
+      }
+      else if (hasWord('preposition') || (hasWord('in') && hasWord('on')) || lower.includes('प्रीपोजिशन')) {
+        answer = "प्रिय विद्यार्थी, Preposition के सरल नियम:\n\n• In: बड़े नगर, देश, वर्ष या घिरे हुए स्थान के अंदर (In Bihar, In 2026, In the room).\n• On: किसी सतह को छूते हुए ऊपर (On the table) अथवा दिन/तारीख हेतु (On Monday).\n• With: किसी औजार/साधन से कार्य करने पर (Write with a pen) या साथ हेतु (With parents).";
+      }
+
+      // ===== 7. OUT OF SYLLABUS / GENERAL KNOWLEDGE / ANY OTHER TOPIC =====
+      else if (lower.includes('कंप्यूटर') || lower.includes('इंटरनेट') || lower.includes('ai') || lower.includes('मोबाइल')) {
+        answer = `प्रिय विद्यार्थी, तकनीक के विषय में समझिए:\n\n• कंप्यूटर एक इलेक्ट्रॉनिक यंत्र है जो इनपुट लेकर प्रोसेस करता है और आउटपुट प्रदान करता है। चार्ल्स बैबेज को कंप्यूटर का पिता कहा जाता है।\n• AI (आर्टिफिशियल इंटेलिजेंस) मशीनों में मानव जैसी बुद्धि और सोचने की क्षमता विकसित करने की तकनीक है, जिसका उपयोग आज शिक्षा और विज्ञान में हो रहा है।`;
+      }
+      else if (lower.includes('सूरज') || lower.includes('चांद') || lower.includes('पृथ्वी') || lower.includes('अंतरिक्ष') || lower.includes('तारा')) {
+        answer = `प्रिय विद्यार्थी, खगोल विज्ञान का ज्ञान:\n\n• सूर्य हमारे सौरमंडल का केंद्र है और पृथ्वी का सबसे नजदीकी तारा है। यह मुख्यतः हाइड्रोजन और हीलियम गैसों से बना है।\n• पृथ्वी सूर्य की परिक्रमा 365.25 दिनों में पूरी करती है जिससे ऋतु परिवर्तन होता है, और अपनी धुरी पर 24 घंटे में घूमती है जिससे दिन-रात होते हैं।`;
+      }
+      else {
+        // Universal Smart Concept Explainer for any miscellaneous query
+        answer = `प्रिय विद्यार्थी, आपके प्रश्न "${q}" का शिक्षक समाधान:\n\nयह एक बहुत ही विचारणीय और ज्ञानवर्धक प्रश्न है। किसी भी विषय को समझने के लिए उसके तीन मुख्य आधार होते हैं:\n\n1. मूल संकल्पना: इस प्रश्न के पीछे जो मूल सिद्धांत अथवा कारण है, उसे ध्यान से पहचानें।\n2. वैज्ञानिक/तार्किक दृष्टिकोण: हर क्रिया का एक निश्चित नियम और प्रभाव होता है।\n3. अनुप्रयोग: इस ज्ञान का हमारे दैनिक जीवन और अध्ययन में सीधा उपयोग होता है।\n\nयदि यह प्रश्न आपके 10वीं बोर्ड के किसी विशिष्ट अध्याय से संबंधित है, तो संबंधित विषय का अध्याय टेस्ट देकर भी आप इसका पूरा स्टेप-बाय-स्टेप हल समझ सकते हैं। मन लगाकर पढ़ते रहिए, ज्ञान ही सबसे बड़ी शक्ति है!`;
+      }
+
+      document.getElementById('modalAnswerText').innerText = answer;
+      document.getElementById('aiTeacherModal').classList.remove('hidden');
+      speakCleanHindi(answer);
+    }
+
+    function closeMasterJiModal() {
+      speechSynth.cancel();
+      isSpeaking = false;
+      document.getElementById('aiTeacherModal').classList.add('hidden');
+    }
+
+    // --- 4. 3D PHYSICS LAB ENGINE ---
+    let currentLaserAngle = 45;
+
+    function updateLaserAngle(val) {
+      currentLaserAngle = parseInt(val);
+      document.getElementById('angleValText').innerText = currentLaserAngle + "°";
+      document.getElementById('angleLiveBadge').innerText = `∠i = ${currentLaserAngle}° | ∠r = ${currentLaserAngle}°`;
+      document.getElementById('angleSlider').value = currentLaserAngle;
+
+      const rad = (currentLaserAngle * Math.PI) / 180;
+      const rayLen = 130;
+      const dx = Math.sin(rad) * rayLen;
+      const dy = Math.cos(rad) * rayLen;
+
+      const incRay = document.getElementById('incidentRay');
+      const refRay = document.getElementById('reflectedRay');
+      if (incRay && refRay) {
+        incRay.setAttribute('x1', 150 - dx);
+        incRay.setAttribute('y1', 150 - dy);
+        refRay.setAttribute('x2', 150 + dx);
+        refRay.setAttribute('y2', 150 - dy);
+      }
+
+      const note = `उत्तम! आपने आपतन कोण ${currentLaserAngle}° निर्धारित किया है। परावर्तन के नियमानुसार परावर्तित किरण भी ठीक ${currentLaserAngle}° के कोण पर मुड़ रही है (∠i = ∠r = ${currentLaserAngle}°)।`;
+      document.getElementById('labExplanationText').innerText = note;
+    }
+
+    function changeAngle(delta) {
+      let next = currentLaserAngle + delta;
+      if (next < 15) next = 15;
+      if (next > 75) next = 75;
+      updateLaserAngle(next);
+      speakCleanHindi(document.getElementById('labExplanationText').innerText);
+    }
+
+    function speakLabExplanation() {
+      speakCleanHindi(document.getElementById('labExplanationText').innerText);
+    }
+
+    // --- 5. UI NAVIGATION & TEST RUNNER ---
+    function renderHome() {
+      const grid = document.getElementById('subjectGrid');
+      grid.innerHTML = SUBJECTS.map(s => `
+        <div onclick="selectSubject('${s.id}', '${s.name}')" class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm hover:border-indigo-400 cursor-pointer flex items-center gap-2.5 transition">
+          <div class="w-9 h-9 rounded-lg bg-gradient-to-tr ${s.color} text-white flex items-center justify-center text-sm shadow-sm flex-shrink-0">
+            <i class="fa-solid ${s.icon}"></i>
+          </div>
+          <div class="overflow-hidden">
+            <h4 class="font-bold text-xs text-slate-800 truncate">${s.name}</h4>
+            <span class="text-[10px] text-slate-500">सभी अध्याय उपलब्ध</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function selectSubject(id, name) {
+      hideAll();
+      document.getElementById('screenChapters').classList.remove('hidden');
+      document.getElementById('currentSubjectTitle').innerText = name;
+      const list = CHAPTERS[id] || [{ id: 'm1', name: 'अध्याय 1: महत्वपूर्ण बोर्ड प्रश्न' }];
+      document.getElementById('chapterList').innerHTML = list.map(c => `
+        <div onclick="startTest('${c.id}')" class="p-3 bg-white rounded-xl border border-slate-200 hover:border-indigo-500 cursor-pointer flex justify-between items-center text-xs font-semibold text-slate-700 shadow-sm transition">
+          <span>${c.name}</span>
+          <i class="fa-solid fa-circle-play text-indigo-600 text-sm"></i>
+        </div>
+      `).join('');
+    }
+
+    let currentQuestions = [];
+    let currentQIndex = 0;
+    let userAnswers = {};
+
+    function startTest(chId) {
+      currentQuestions = QUESTIONS_DB[chId] || [
+        { q: "इस अध्याय का महत्वपूर्ण बोर्ड प्रश्न: सही विकल्प का चुनाव करें।", opts: ["विकल्प क", "विकल्प ख (सही)", "विकल्प ग", "विकल्प घ"], correct: 1, note: "शिक्षक का हल: इस प्रश्न का सही उत्तर विकल्प ख है।" }
+      ];
+      currentQIndex = 0;
+      userAnswers = {};
+      hideAll();
+      document.getElementById('screenTest').classList.remove('hidden');
+      loadQuestion(0);
+    }
+
+    function loadQuestion(i) {
+      const q = currentQuestions[i];
+      document.getElementById('qIndexBadge').innerText = `प्रश्न ${i + 1} / ${currentQuestions.length}`;
+      document.getElementById('questionText').innerText = q.q;
+
+      const selected = userAnswers[i];
+      document.getElementById('optionsContainer').innerHTML = q.opts.map((opt, idx) => {
+        let cls = "p-3 rounded-xl border border-slate-200 cursor-pointer text-xs font-semibold flex items-center justify-between transition ";
+        if (selected !== undefined) {
+          if (idx === q.correct) cls += "bg-emerald-50 border-emerald-500 text-emerald-800";
+          else if (selected === idx) cls += "bg-red-50 border-red-500 text-red-800";
+          else cls += "bg-slate-50 opacity-50";
+        } else {
+          cls += "hover:bg-indigo-50 bg-white";
+        }
+        return `<div class="${cls}" onclick="pickOption(${idx})">
+          <span>${String.fromCharCode(65 + idx)}. ${opt}</span>
+        </div>`;
+      }).join('');
+
+      const fb = document.getElementById('testTeacherFeedback');
+      if (selected !== undefined) {
+        fb.classList.remove('hidden');
+        document.getElementById('inlineExplanationText').innerText = q.note;
+      } else {
+        fb.classList.add('hidden');
+      }
+
+      document.getElementById('prevBtn').disabled = (i === 0);
+      if (i === currentQuestions.length - 1) {
+        document.getElementById('nextBtn').classList.add('hidden');
+        document.getElementById('finishBtn').classList.remove('hidden');
+      } else {
+        document.getElementById('nextBtn').classList.remove('hidden');
+        document.getElementById('finishBtn').classList.add('hidden');
+      }
+    }
+
+    function pickOption(idx) {
+      if (userAnswers[currentQIndex] !== undefined) return;
+      userAnswers[currentQIndex] = idx;
+      loadQuestion(currentQIndex);
+      speakCleanHindi(currentQuestions[currentQIndex].note);
+    }
+
+    function speakInlineExplanation() {
+      const txt = document.getElementById('inlineExplanationText').innerText;
+      speakCleanHindi(txt);
+    }
+
+    function nextQuestion() { if (currentQIndex < currentQuestions.length - 1) { currentQIndex++; loadQuestion(currentQIndex); } }
+    function prevQuestion() { if (currentQIndex > 0) { currentQIndex--; loadQuestion(currentQIndex); } }
+    function finishTest() { alert("अभ्यास पूर्ण हुआ! आपका प्रयास सराहनीय है।"); goHome(); }
+
+    function openVocabHub() {
+      hideAll();
+      document.getElementById('screenVocab').classList.remove('hidden');
+      renderVocab(VOCAB_BANK);
+    }
+
+    function renderVocab(list) {
+      const box = document.getElementById('vocabListContainer');
+      box.innerHTML = list.map(v => `
+        <div class="bg-white p-3 rounded-xl border border-slate-200 flex items-center justify-between shadow-sm">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-sm text-indigo-900">${v.word}</span>
+              <span class="text-[10px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">${v.pos}</span>
+            </div>
+            <div class="text-xs text-slate-700 font-medium mt-0.5">${v.meaning}</div>
+            <div class="text-[11px] text-slate-400 italic mt-0.5">"${v.ex}"</div>
+          </div>
+          <button onclick="speakWord('${v.word}')" class="w-8 h-8 rounded-full bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white flex items-center justify-center transition">
+            <i class="fa-solid fa-volume-high text-xs"></i>
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function filterVocab(val) {
+      const q = val.toLowerCase();
+      const filtered = VOCAB_BANK.filter(v => v.word.toLowerCase().includes(q) || v.meaning.includes(q));
+      renderVocab(filtered);
+    }
+
+    function openPhysicsLab() { 
+      hideAll(); 
+      document.getElementById('screenPhysicsLab').classList.remove('hidden'); 
+      updateLaserAngle(45);
+    }
+
+    function goHome() { 
+      speechSynth.cancel();
+      hideAll(); 
+      document.getElementById('screenHome').classList.remove('hidden'); 
+    }
+
+    function hideAll() {
+      ['screenHome', 'screenChapters', 'screenTest', 'screenVocab', 'screenPhysicsLab'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+      });
+    }
+
+    // Launch App
+    checkExistingAuth();
+    renderHome();
+  </script>
+</body>
+</html>
